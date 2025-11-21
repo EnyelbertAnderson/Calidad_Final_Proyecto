@@ -1,0 +1,54 @@
+{
+  "info": {
+    "name": "Calidad API - JWT Auth",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Login (obtener token)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"{{username}}\",\n  \"password\": \"{{password}}\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/login/",
+          "host": ["{{base_url}}"],
+          "path": ["api","login",""]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Guarda el token en la variable de entorno 'token' al recibir respuesta",
+              "if (pm.response.code === 200) {",
+              "  var json = pm.response.json();",
+              "  if (json.token) { pm.environment.set('token', json.token); }",
+              "}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Protected (usar token)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{token}}"}
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/protected/",
+          "host": ["{{base_url}}"],
+          "path": ["api","protected",""]
+        }
+      }
+    }
+  ]
+}

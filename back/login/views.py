@@ -5,8 +5,10 @@ import jwt
 from django.conf import settings
 from django.contrib.auth import authenticate
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 
+@csrf_exempt
 def login_view(request):
 	if request.method != 'POST':
 		return JsonResponse({'detail': 'Method not allowed'}, status=405)
