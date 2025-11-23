@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,8 +26,9 @@ SECRET_KEY = 'django-insecure-dv$^o&0k1$uvgsfv)k6lum083hroz17)e=^80stm0=yhy&e8kd
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
+AUTH_USER_MODEL = 'usuarios.Usuario'
 
 # Application definition
 
@@ -37,8 +39,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.gis',
     'rest_framework',
     'login',
+    'usuarios',
+    'vigilancia',
+    "rest_framework_gis",
 ]
 
 MIDDLEWARE = [
@@ -76,8 +82,12 @@ WSGI_APPLICATION = 'Calidad.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',  # si usarás PointField
+        'NAME': os.environ.get('DATABASE_NAME', 'calidad'),
+        'USER': os.environ.get('DATABASE_USER', 'calidad_user'),
+        'PASSWORD': os.environ.get('DATABASE_PASSWORD', 'calidad_pass'),
+        'HOST': os.environ.get('DATABASE_HOST', 'db'),
+        'PORT': os.environ.get('DATABASE_PORT', '5432'),
     }
 }
 
@@ -112,7 +122,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-
+STATIC_ROOT = BASE_DIR / "staticfiles"
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 

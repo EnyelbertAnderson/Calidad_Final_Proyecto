@@ -1,0 +1,52 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgis/postgis:15-3.3
+    container_name: calidad_db
+    environment:
+      POSTGRES_DB: calidad
+      POSTGRES_USER: calidad_user
+      POSTGRES_PASSWORD: calidad_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4:7
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pgadmin@example.com
+      PGADMIN_DEFAULT_PASSWORD: pgadmin
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: calidad_web
+    command: ["gunicorn", "Calidad.wsgi:application", "--bind", "0.0.0.0:8000"]
+    volumes:
+      - ./:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=True
+      - SECRET_KEY=${SECRET_KEY:-django-secret}
+      - DATABASE_NAME=calidad
+      - DATABASE_USER=calidad_user
+      - DATABASE_PASSWORD=calidad_pass
+      - DATABASE_HOST=db
+      - DATABASE_PORT=5432
+    depends_on:
+      - db
+    restart: on-failure
+
+volumes:
+  pgdata:
