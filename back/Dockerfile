@@ -1,7 +1,7 @@
 # base image
 FROM python:3.11-slim
 
-# instalar dependencias del sistema para GDAL/PostGIS
+# instalar dependencias del sistema para GDAL/PostGIS y netcat
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     binutils \
@@ -11,6 +11,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq-dev \
     gettext \
     curl \
+    netcat-openbsd \
+    # Limpieza para reducir el tamaño de la imagen
     && rm -rf /var/lib/apt/lists/*
 
 # configurar variables de entorno para compilación de GDAL
@@ -28,8 +30,10 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 COPY . /app
 
 # entrypoint
+# Copia el script de inicio
 COPY ./entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+# *** CRITICAL FIX: Eliminar saltos de línea de Windows (CRLF) y asegurar permisos de ejecución ***
+RUN sed -i 's/\r$//' /entrypoint.sh && chmod +x /entrypoint.sh
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1

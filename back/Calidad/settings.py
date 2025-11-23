@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'usuarios',
     'vigilancia',
     "rest_framework_gis",
+    'rutas'
 ]
 
 MIDDLEWARE = [
