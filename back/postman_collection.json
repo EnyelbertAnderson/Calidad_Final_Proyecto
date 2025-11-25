@@ -1,54 +1,463 @@
 {
   "info": {
-    "name": "Calidad API - JWT Auth",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    "name": "Calidad API - Sistema de Vigilancia",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "API completa para el Sistema de Gestión de Cámaras de Vigilancia"
   },
   "item": [
     {
-      "name": "Login (obtener token)",
-      "request": {
-        "method": "POST",
-        "header": [
-          {"key": "Content-Type", "value": "application/json"}
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"username\": \"{{username}}\",\n  \"password\": \"{{password}}\"\n}"
-        },
-        "url": {
-          "raw": "{{base_url}}/api/login/",
-          "host": ["{{base_url}}"],
-          "path": ["api","login",""]
-        }
-      },
-      "event": [
+      "name": "Autenticación",
+      "item": [
         {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "// Guarda el token en la variable de entorno 'token' al recibir respuesta",
-              "if (pm.response.code === 200) {",
-              "  var json = pm.response.json();",
-              "  if (json.token) { pm.environment.set('token', json.token); }",
-              "}"
-            ]
+          "name": "Login (obtener token)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/login/",
+              "host": ["{{base_url}}"],
+              "path": ["api","login",""]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  var json = pm.response.json();",
+                  "  if (json.token) { ",
+                  "    pm.environment.set('token', json.token);",
+                  "    console.log('Token guardado:', json.token);",
+                  "  }",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Protected (verificar token)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/protected/",
+              "host": ["{{base_url}}"],
+              "path": ["api","protected",""]
+            }
           }
         }
       ]
     },
     {
-      "name": "Protected (usar token)",
-      "request": {
-        "method": "GET",
-        "header": [
-          {"key": "Authorization", "value": "Bearer {{token}}"}
-        ],
-        "url": {
-          "raw": "{{base_url}}/api/protected/",
-          "host": ["{{base_url}}"],
-          "path": ["api","protected",""]
+      "name": "Zonas",
+      "item": [
+        {
+          "name": "Listar zonas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/vigilancia/zonas/",
+              "host": ["{{base_url}}"],
+              "path": ["api","vigilancia","zonas",""]
+            }
+          }
         }
-      }
+      ]
+    },
+    {
+      "name": "Cámaras",
+      "item": [
+        {
+          "name": "Listar todas las cámaras",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/vigilancia/camaras/",
+              "host": ["{{base_url}}"],
+              "path": ["api","vigilancia","camaras",""]
+            }
+          }
+        },
+        {
+          "name": "Filtrar cámaras por estado",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/vigilancia/camaras/?estado=operativa",
+              "host": ["{{base_url}}"],
+              "path": ["api","vigilancia","camaras",""],
+              "query": [
+                {"key": "estado", "value": "operativa"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Filtrar cámaras por tecnología",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/vigilancia/camaras/?tecnologia=Cámara IP",
+              "host": ["{{base_url}}"],
+              "path": ["api","vigilancia","camaras",""],
+              "query": [
+                {"key": "tecnologia", "value": "Cámara IP"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Filtrar cámaras por zona",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/vigilancia/camaras/?zona=La Perla",
+              "host": ["{{base_url}}"],
+              "path": ["api","vigilancia","camaras",""],
+              "query": [
+                {"key": "zona", "value": "La Perla"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Buscar cámara por dirección",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/vigilancia/camaras/?search=Brasil",
+              "host": ["{{base_url}}"],
+              "path": ["api","vigilancia","camaras",""],
+              "query": [
+                {"key": "search", "value": "Brasil"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Obtener cámara por ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/vigilancia/camaras/1/",
+              "host": ["{{base_url}}"],
+              "path": ["api","vigilancia","camaras","1",""]
+            }
+          }
+        },
+        {
+          "name": "Crear cámara",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"direccion\": \"Nueva Dirección Test\",\n  \"tecnologia\": \"Cámara IP\",\n  \"tipo\": \"Domo PTZ\",\n  \"marca\": \"DAHUA\",\n  \"ubicacion\": {\n    \"type\": \"Point\",\n    \"coordinates\": [-77.12, -12.07]\n  },\n  \"administrador\": \"MUNICIPALIDAD TEST\",\n  \"estado\": \"operativa\",\n  \"zona_id\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/vigilancia/camaras/",
+              "host": ["{{base_url}}"],
+              "path": ["api","vigilancia","camaras",""]
+            }
+          }
+        },
+        {
+          "name": "Actualizar estado de cámara",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"inactiva\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/vigilancia/camaras/1/",
+              "host": ["{{base_url}}"],
+              "path": ["api","vigilancia","camaras","1",""]
+            }
+          }
+        },
+        {
+          "name": "Eliminar cámara",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/vigilancia/camaras/1/",
+              "host": ["{{base_url}}"],
+              "path": ["api","vigilancia","camaras","1",""]
+            }
+          }
+        },
+        {
+          "name": "Cámaras en formato GeoJSON",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/vigilancia/camaras/geo/",
+              "host": ["{{base_url}}"],
+              "path": ["api","vigilancia","camaras","geo",""]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Eventos",
+      "item": [
+        {
+          "name": "Listar todos los eventos",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/vigilancia/eventos/",
+              "host": ["{{base_url}}"],
+              "path": ["api","vigilancia","eventos",""]
+            }
+          }
+        },
+        {
+          "name": "Filtrar eventos por tipo",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/vigilancia/eventos/?tipo=fallo_tecnico",
+              "host": ["{{base_url}}"],
+              "path": ["api","vigilancia","eventos",""],
+              "query": [
+                {"key": "tipo", "value": "fallo_tecnico"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Filtrar eventos por severidad",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/vigilancia/eventos/?severidad=critica",
+              "host": ["{{base_url}}"],
+              "path": ["api","vigilancia","eventos",""],
+              "query": [
+                {"key": "severidad", "value": "critica"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Filtrar eventos por estado",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/vigilancia/eventos/?estado=pendiente",
+              "host": ["{{base_url}}"],
+              "path": ["api","vigilancia","eventos",""],
+              "query": [
+                {"key": "estado", "value": "pendiente"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear evento",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"camara\": 1,\n  \"tipo\": \"fallo_tecnico\",\n  \"severidad\": \"alta\",\n  \"estado\": \"pendiente\",\n  \"titulo\": \"Cámara sin señal\",\n  \"descripcion\": \"La cámara dejó de transmitir señal a las 14:30\",\n  \"reportado_por\": \"Juan Pérez\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/vigilancia/eventos/",
+              "host": ["{{base_url}}"],
+              "path": ["api","vigilancia","eventos",""]
+            }
+          }
+        },
+        {
+          "name": "Obtener evento por ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/vigilancia/eventos/1/",
+              "host": ["{{base_url}}"],
+              "path": ["api","vigilancia","eventos","1",""]
+            }
+          }
+        },
+        {
+          "name": "Actualizar evento",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"en_atencion\",\n  \"atendido_por\": \"María González\",\n  \"notas_resolucion\": \"Se está verificando la conexión de red\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/vigilancia/eventos/1/",
+              "host": ["{{base_url}}"],
+              "path": ["api","vigilancia","eventos","1",""]
+            }
+          }
+        },
+        {
+          "name": "Resolver evento",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"resuelto\",\n  \"atendido_por\": \"María González\",\n  \"notas_resolucion\": \"Se reinició la cámara y volvió a funcionar correctamente\",\n  \"fecha_resolucion\": \"2025-11-25T18:00:00Z\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/vigilancia/eventos/1/",
+              "host": ["{{base_url}}"],
+              "path": ["api","vigilancia","eventos","1",""]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "item": [
+        {
+          "name": "Estadísticas generales",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/vigilancia/dashboard/stats/",
+              "host": ["{{base_url}}"],
+              "path": ["api","vigilancia","dashboard","stats",""]
+            }
+          }
+        },
+        {
+          "name": "Eventos recientes",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/vigilancia/dashboard/eventos-recientes/?limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api","vigilancia","dashboard","eventos-recientes",""],
+              "query": [
+                {"key": "limit", "value": "10"}
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Rutas",
+      "item": [
+        {
+          "name": "Listar rutas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/rutas/rutas/",
+              "host": ["{{base_url}}"],
+              "path": ["api","v1","rutas","rutas",""]
+            }
+          }
+        },
+        {
+          "name": "Crear ruta",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Ruta Centro\",\n  \"descripcion\": \"Patrullaje por el centro de La Perla\",\n  \"linea\": {\n    \"type\": \"LineString\",\n    \"coordinates\": [\n      [-77.1248, -12.0675],\n      [-77.11938, -12.06587],\n      [-77.12991, -12.07022]\n    ]\n  },\n  \"camaras\": [1, 2, 3]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/rutas/rutas/",
+              "host": ["{{base_url}}"],
+              "path": ["api","v1","rutas","rutas",""]
+            }
+          }
+        }
+      ]
     }
   ]
 }
