@@ -16,7 +16,7 @@ python manage.py makemigrations --noinput || true
 python manage.py migrate --noinput
 
 # recolectar estáticos opcional
-# python manage.py collectstatic --noinput
+python manage.py collectstatic --noinput
 
 # ejecutar el comando pasado al contenedor
 exec "$@"
