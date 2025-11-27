@@ -16,7 +16,7 @@ export function Login() {
         password,
     });
 
-    localStorage.setItem("token", data.access);
+    localStorage.setItem("token", data.token);
     window.location.href = "/dashboard";
 
     } catch (error) {
