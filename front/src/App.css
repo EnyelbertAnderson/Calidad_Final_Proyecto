@@ -1,1 +1,48 @@
 @import "tailwindcss";
+
+/* Estilos para el mapa de Leaflet */
+.leaflet-container {
+  font-family: inherit;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+}
+
+.leaflet-popup-content {
+  margin: 0;
+  padding: 0;
+}
+
+.leaflet-popup-tip {
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Tema oscuro para los tiles del mapa */
+.map-tiles {
+  filter: brightness(0.85) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7);
+}
+
+/* Marcadores personalizados */
+.custom-marker {
+  background: none;
+  border: none;
+}
+
+/* Controles del mapa con tema */
+.leaflet-control-zoom a {
+  background-color: #1c2620 !important;
+  color: #9eb7a8 !important;
+  border-color: #3d5245 !important;
+}
+
+.leaflet-control-zoom a:hover {
+  background-color: #3d5245 !important;
+  color: white !important;
+}
+
+.leaflet-bar {
+  border: 1px solid #3d5245 !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3) !important;
+}
