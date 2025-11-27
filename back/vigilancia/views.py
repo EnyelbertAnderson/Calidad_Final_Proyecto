@@ -1,4 +1,5 @@
 from rest_framework.views import APIView
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.gis.geos import Point
@@ -58,6 +59,13 @@ class CamaraList(APIView):
                 Q(marca__icontains=search) |
                 Q(administrador__icontains=search)
             )
+
+        # Paginate results so the frontend can use response.data.results
+        paginator = PageNumberPagination()
+        page = paginator.paginate_queryset(qs, request)
+        if page is not None:
+            serializer = CamaraSerializer(page, many=True)
+            return paginator.get_paginated_response(serializer.data)
 
         serializer = CamaraSerializer(qs, many=True)
         return Response(serializer.data)
@@ -140,6 +148,17 @@ class CamaraGeo(APIView):
         
         if estado:
             qs = qs.filter(estado=estado)
+
+        # Only return cameras that have a valid geometry (not null and not at (0,0))
+        qs = qs.filter(ubicacion__isnull=False)
+        qs = qs.exclude(ubicacion__x=0, ubicacion__y=0)
+
+        # Paginate Geo results so the client can request partial sets for large datasets
+        paginator = PageNumberPagination()
+        page = paginator.paginate_queryset(qs, request)
+        if page is not None:
+            serializer = CamaraGeoSerializer(page, many=True)
+            return paginator.get_paginated_response(serializer.data)
 
         serializer = CamaraGeoSerializer(qs, many=True)
         return Response(serializer.data)

@@ -2,8 +2,7 @@ import './App.css'
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Login } from './Components/Login';
 import { Dashboard } from './Components/Dashboard';
-
-const Camaras = () => <div className="text-white">Módulo de Cámaras (próximamente)</div>;
+import { Camaras } from './Components/Camaras';
 const Eventos = () => <div className="text-white">Módulo de Eventos (próximamente)</div>;
 const Zonas = () => <div className="text-white">Módulo de Zonas (próximamente)</div>;
 const Reportes = () => <div className="text-white">Módulo de Reportes (próximamente)</div>;

@@ -15,6 +15,7 @@ export function Dashboard() {
   const [zonas, setZonas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -136,7 +137,10 @@ export function Dashboard() {
       <h3 className="text-lg font-semibold text-white">
         Mapa de Cámaras
       </h3>
-      <button className="flex items-center gap-2 rounded-lg border border-[#3d5245] bg-[#111714] px-3 py-1.5 text-xs text-[#9eb7a8] hover:text-white">
+      <button
+        onClick={() => navigate('/camaras')}
+        className="flex items-center gap-2 rounded-lg border border-[#3d5245] bg-[#111714] px-3 py-1.5 text-xs text-[#9eb7a8] hover:text-white"
+      >
         <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
         </svg>
@@ -146,6 +150,8 @@ export function Dashboard() {
     
     {/* Reemplazar el placeholder con el mapa real */}
     <MapaCamaras />
+
+    {/* fullscreen action now redirects to /camaras (see sidebar) */}
   </div>
 </div>
 

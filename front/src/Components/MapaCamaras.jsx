@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
-import axios from 'axios';
+import { camarasService } from '../services/api';
 
 // Fix para los iconos de Leaflet en React
 delete L.Icon.Default.prototype._getIconUrl;
@@ -56,7 +56,7 @@ function FitBounds({ camaras }) {
   return null;
 }
 
-export function MapaCamaras() {
+export function MapaCamaras({ fullscreen = false, onClose = null, heightClass = 'h-[400px]' }) {
   const [camaras, setCamaras] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filtroEstado, setFiltroEstado] = useState('todas');
@@ -68,22 +68,38 @@ export function MapaCamaras() {
   const fetchCamaras = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('token');
-      const config = {
-        headers: { Authorization: `Bearer ${token}` },
-        params: filtroEstado !== 'todas' ? { estado: filtroEstado } : {},
+      // Use the camarasService that already includes the auth token interceptor
+      const params = filtroEstado !== 'todas' ? { estado: filtroEstado } : {};
+      const response = await camarasService.getGeo(params);
+
+      // Normalize possible response shapes coming from the backend:
+      // - Paginated: response.data.results -> array of Feature objects
+      // - FeatureCollection: response.data.features
+      // - Plain array of Feature objects: response.data
+      const raw = response.data?.results ?? response.data?.features ?? response.data ?? [];
+
+      // Convert GeoJSON Feature -> object shape expected by the component
+      const normalize = (item) => {
+        if (!item) return null;
+        // If it's a GeoJSON Feature
+        if (item.type === 'Feature' && item.properties) {
+          return {
+            ...item.properties,
+            ubicacion: item.geometry || null,
+            // ensure zona stays the same shape if present
+            zona: item.properties.zona ?? item.zona ?? null,
+          };
+        }
+
+        // If the item already looks like the Camara object (has ubicacion)
+        return item;
       };
 
-      const response = await axios.get(
-        'http://localhost:8000/api/vigilancia/camaras/',
-        config
-      );
-
-      // Filtrar solo cámaras con coordenadas válidas
-      const camarasConUbicacion = response.data.results?.filter(
-        c => c.ubicacion?.coordinates && 
-             c.ubicacion.coordinates[0] !== 0 && 
-             c.ubicacion.coordinates[1] !== 0
+      // Keep only cameras with valid coordinates (non-zero)
+      const camarasConUbicacion = (raw
+        .map(normalize)
+        .filter(Boolean)
+        .filter(c => c.ubicacion?.coordinates && c.ubicacion.coordinates[0] !== 0 && c.ubicacion.coordinates[1] !== 0)
       ) || [];
 
       setCamaras(camarasConUbicacion);
@@ -108,8 +124,24 @@ export function MapaCamaras() {
     );
   }
 
+  // If in fullscreen mode render an overlay wrapper
+  const wrapperClass = fullscreen
+    ? 'fixed inset-0 z-[2000] flex items-center justify-center bg-black/60 p-6'
+    : `relative ${heightClass} w-full`;
+
   return (
-    <div className="relative h-[400px] w-full">
+    <div className={wrapperClass}>
+      {fullscreen && (
+        <div className="absolute right-6 top-6 z-[2100] flex items-center gap-2">
+          <button
+            onClick={() => onClose && onClose()}
+            className="rounded-lg bg-[#111714]/80 px-3 py-1.5 text-xs font-medium text-[#9eb7a8] hover:text-white border border-[#3d5245]"
+            aria-label="Cerrar mapa"
+          >
+            Cerrar
+          </button>
+        </div>
+      )}
       {/* Controles superiores */}
       <div className="absolute left-4 top-4 z-[1000] flex gap-2">
         {['todas', 'operativa', 'inactiva', 'mantenimiento'].map((estado) => (
@@ -138,7 +170,7 @@ export function MapaCamaras() {
       <MapContainer
         center={centroDefecto}
         zoom={14}
-        className="h-full w-full rounded-lg"
+        className={`h-full w-full ${fullscreen ? '' : 'rounded-lg'}`}
         style={{ background: '#111714' }}
       >
         <TileLayer

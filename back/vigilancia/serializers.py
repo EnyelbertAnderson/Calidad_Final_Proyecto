@@ -1,4 +1,5 @@
 from rest_framework_gis.serializers import GeoFeatureModelSerializer
+from rest_framework_gis.fields import GeometryField
 from rest_framework import serializers
 from .models import Zona, Camara, Evento
 
@@ -11,6 +12,8 @@ class ZonaSerializer(serializers.ModelSerializer):
 class CamaraSerializer(serializers.ModelSerializer):
     zona = ZonaSerializer(read_only=True)
     zona_id = serializers.IntegerField(write_only=True, required=False)
+    # Ensure ubicacion is returned/accepted as GeoJSON (e.g. { type: 'Point', coordinates: [lng, lat] })
+    ubicacion = GeometryField()
 
     class Meta:
         model = Camara
