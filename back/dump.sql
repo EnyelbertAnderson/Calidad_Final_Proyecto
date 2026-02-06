@@ -628,32 +628,32 @@ COPY public.django_content_type (id, app_label, model) FROM stdin;
 --
 
 COPY public.django_migrations (id, app, name, applied) FROM stdin;
-1	contenttypes	0001_initial	2025-11-27 18:31:48.031119+00
-2	contenttypes	0002_remove_content_type_name	2025-11-27 18:31:48.041131+00
-3	auth	0001_initial	2025-11-27 18:31:48.110222+00
-4	auth	0002_alter_permission_name_max_length	2025-11-27 18:31:48.116915+00
-5	auth	0003_alter_user_email_max_length	2025-11-27 18:31:48.12377+00
-6	auth	0004_alter_user_username_opts	2025-11-27 18:31:48.130898+00
-7	auth	0005_alter_user_last_login_null	2025-11-27 18:31:48.13802+00
-8	auth	0006_require_contenttypes_0002	2025-11-27 18:31:48.141313+00
-9	auth	0007_alter_validators_add_error_messages	2025-11-27 18:31:48.148327+00
-10	auth	0008_alter_user_username_max_length	2025-11-27 18:31:48.156898+00
-11	auth	0009_alter_user_last_name_max_length	2025-11-27 18:31:48.163873+00
-12	auth	0010_alter_group_name_max_length	2025-11-27 18:31:48.173078+00
-13	auth	0011_update_proxy_permissions	2025-11-27 18:31:48.181148+00
-14	auth	0012_alter_user_first_name_max_length	2025-11-27 18:31:48.188099+00
-15	usuarios	0001_initial	2025-11-27 18:31:48.265972+00
-16	admin	0001_initial	2025-11-27 18:31:48.299907+00
-17	admin	0002_logentry_remove_auto_add	2025-11-27 18:31:48.308463+00
-18	admin	0003_logentry_add_action_flag_choices	2025-11-27 18:31:48.31826+00
-19	vigilancia	0001_initial	2025-11-27 18:31:48.348953+00
-20	vigilancia	0002_zona	2025-11-27 18:31:48.358446+00
-21	vigilancia	0003_crear_zona_por_defecto	2025-11-27 18:31:48.371939+00
-22	vigilancia	0004_camara_zona	2025-11-27 18:31:48.386586+00
-23	rutas	0001_initial	2025-11-27 18:31:48.433608+00
-24	sessions	0001_initial	2025-11-27 18:31:48.459557+00
-25	usuarios	0002_alter_usuario_options_alter_usuario_managers_and_more	2025-11-27 18:31:48.570973+00
-26	vigilancia	0005_alter_camara_options_camara_estado_and_more	2025-11-27 18:31:48.608975+00
+1	contenttypes	0001_initial	2025-11-27 21:39:06.535803+00
+2	contenttypes	0002_remove_content_type_name	2025-11-27 21:39:06.543808+00
+3	auth	0001_initial	2025-11-27 21:39:06.594501+00
+4	auth	0002_alter_permission_name_max_length	2025-11-27 21:39:06.59981+00
+5	auth	0003_alter_user_email_max_length	2025-11-27 21:39:06.605769+00
+6	auth	0004_alter_user_username_opts	2025-11-27 21:39:06.61157+00
+7	auth	0005_alter_user_last_login_null	2025-11-27 21:39:06.618456+00
+8	auth	0006_require_contenttypes_0002	2025-11-27 21:39:06.620732+00
+9	auth	0007_alter_validators_add_error_messages	2025-11-27 21:39:06.626608+00
+10	auth	0008_alter_user_username_max_length	2025-11-27 21:39:06.633394+00
+11	auth	0009_alter_user_last_name_max_length	2025-11-27 21:39:06.640402+00
+12	auth	0010_alter_group_name_max_length	2025-11-27 21:39:06.64627+00
+13	auth	0011_update_proxy_permissions	2025-11-27 21:39:06.653501+00
+14	auth	0012_alter_user_first_name_max_length	2025-11-27 21:39:06.659215+00
+15	usuarios	0001_initial	2025-11-27 21:39:06.713862+00
+16	admin	0001_initial	2025-11-27 21:39:06.738248+00
+17	admin	0002_logentry_remove_auto_add	2025-11-27 21:39:06.745366+00
+18	admin	0003_logentry_add_action_flag_choices	2025-11-27 21:39:06.752757+00
+19	vigilancia	0001_initial	2025-11-27 21:39:06.776185+00
+20	vigilancia	0002_zona	2025-11-27 21:39:06.782695+00
+21	vigilancia	0003_crear_zona_por_defecto	2025-11-27 21:39:06.794847+00
+22	vigilancia	0004_camara_zona	2025-11-27 21:39:06.805719+00
+23	rutas	0001_initial	2025-11-27 21:39:06.837271+00
+24	sessions	0001_initial	2025-11-27 21:39:06.854787+00
+25	usuarios	0002_alter_usuario_options_alter_usuario_managers_and_more	2025-11-27 21:39:06.963539+00
+26	vigilancia	0005_alter_camara_options_camara_estado_and_more	2025-11-27 21:39:06.999339+00
 \.
 
 
@@ -694,6 +694,7 @@ COPY public.spatial_ref_sys (srid, auth_name, auth_srid, srtext, proj4text) FROM
 --
 
 COPY public.usuarios_usuario (password, last_login, is_superuser, email, is_staff, is_active, date_joined, id_usuario, nombre, rol) FROM stdin;
+pbkdf2_sha256$1000000$JgsgoRDvadE2cvkayur8OH$TM2fD2/OjkgG4BV9JRtohM3iN4nMkmdQvBaeriSAhhc=	\N	t	admin@gmail.com	t	t	2025-11-27 21:42:21.205284+00	1	admin	admin
 \.
 
 
@@ -853,7 +854,7 @@ SELECT pg_catalog.setval('public.usuarios_usuario_groups_id_seq', 1, false);
 -- Name: usuarios_usuario_id_usuario_seq; Type: SEQUENCE SET; Schema: public; Owner: calidad_user
 --
 
-SELECT pg_catalog.setval('public.usuarios_usuario_id_usuario_seq', 1, false);
+SELECT pg_catalog.setval('public.usuarios_usuario_id_usuario_seq', 1, true);
 
 
 --
